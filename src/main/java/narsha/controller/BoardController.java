@@ -2,8 +2,8 @@ package narsha.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpSession;
-import narsha.dto.JobPostingBoardEntityResponse;
-import narsha.dto.JobPostingBoardRequest;
+import narsha.dto.BoardEntityResponse;
+import narsha.dto.BoardRequest;
 import narsha.service.BoardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ public class BoardController {
     @PostMapping("/create")
     @Operation(summary = "게시판 생성")
     public ResponseEntity<Void> createJobPostingBoard(
-            @RequestBody JobPostingBoardRequest request, BindingResult bindingResult, HttpSession session
+            @RequestBody BoardRequest request, BindingResult bindingResult, HttpSession session
     ) {
         boardService.createBoard(request, bindingResult, session);
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -33,19 +33,19 @@ public class BoardController {
 
     @GetMapping("/{id}")
     @Operation(summary = "상세 게시판")
-    public ResponseEntity<JobPostingBoardEntityResponse> findBoardById(
+    public ResponseEntity<BoardEntityResponse> findBoardById(
             @PathVariable Long id
     ) {
-        JobPostingBoardEntityResponse response = boardService.findBoardById(id);
+        BoardEntityResponse response = boardService.findBoardById(id);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/lists")
     @Operation(summary = "게시판 목록")
-    public ResponseEntity<List<JobPostingBoardEntityResponse>> findBoardPart(
+    public ResponseEntity<List<BoardEntityResponse>> findBoardPart(
             Integer howMany, Integer pageNum
     ) {
-        List<JobPostingBoardEntityResponse> response = boardService.findBoardPart(howMany, pageNum);
+        List<BoardEntityResponse> response = boardService.findBoardPart(howMany, pageNum);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class JobPostingBoardEntityResponse {
+public class BoardEntityResponse {
 
     @Schema(description = "계시판 id")
     private long id;

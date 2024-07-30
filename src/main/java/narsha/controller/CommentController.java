@@ -2,8 +2,8 @@ package narsha.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpSession;
-import narsha.dto.CommentEntityRequest;
-import narsha.dto.CommentEntityResponse;
+import narsha.dto.CommentRequest;
+import narsha.dto.CommentResponse;
 import narsha.service.CommentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ public class CommentController {
     @PostMapping("/create")
     @Operation(summary = "댓글생성")
     public ResponseEntity<Void> createComment(
-            @RequestBody CommentEntityRequest request, BindingResult bindingResult, HttpSession session
+            @RequestBody CommentRequest request, BindingResult bindingResult, HttpSession session
     ) {
         commentService.createComment(request, bindingResult, session);
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -33,10 +33,10 @@ public class CommentController {
 
     @GetMapping("/{id}")
     @Operation(summary = "게시판 ID에 포함 되어 있는 댓글보기")
-    public ResponseEntity<List<CommentEntityResponse>> findCommentByBoardId(
+    public ResponseEntity<List<CommentResponse>> findCommentByBoardId(
             @PathVariable Long id
     ) {
-        List<CommentEntityResponse> response = commentService.findCommentByBoardId(id);
+        List<CommentResponse> response = commentService.findCommentByBoardId(id);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

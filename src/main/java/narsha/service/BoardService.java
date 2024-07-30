@@ -1,8 +1,8 @@
 package narsha.service;
 
 import jakarta.servlet.http.HttpSession;
-import narsha.dto.JobPostingBoardEntityResponse;
-import narsha.dto.JobPostingBoardRequest;
+import narsha.dto.BoardEntityResponse;
+import narsha.dto.BoardRequest;
 import narsha.entity.Board;
 import narsha.entity.User;
 import narsha.exception.InvalidRegisterException;
@@ -29,28 +29,28 @@ public class BoardService {
         this.authService = authService;
     }
 
-    public void createBoard(JobPostingBoardRequest request, BindingResult bindingResult, HttpSession session) {
+    public void createBoard(BoardRequest request, BindingResult bindingResult, HttpSession session) {
         validateBindingResult(bindingResult);
         User user = authService.getUserFromSession(session);
         Board board = request.toEntity(user);
         boardRepository.save(board);
     }
 
-    public JobPostingBoardEntityResponse findBoardById(Long id) {
+    public BoardEntityResponse findBoardById(Long id) {
         checkBoardExists(id);
 
         Board board = boardRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found with id " + id));
-        return new JobPostingBoardEntityResponse(board.getId(), board.getTitle(), board.getContents(), board.getEditDt(), board.getCreateDt());
+        return new BoardEntityResponse(board.getId(), board.getTitle(), board.getContents(), board.getEditDt(), board.getCreateDt());
     }
 
-    public List<JobPostingBoardEntityResponse> findBoardPart(Integer howMany, Integer pageNum) {
+    public List<BoardEntityResponse> findBoardPart(Integer howMany, Integer pageNum) {
         validatePaginationParameters(howMany, pageNum);
 
         Pageable pageable = PageRequest.of(pageNum, howMany);
         Page<Board> page = boardRepository.findAll(pageable);
 
         return page.getContent().stream()
-                .map(board -> new JobPostingBoardEntityResponse(
+                .map(board -> new BoardEntityResponse(
                                 board.getId(),
                                 board.getTitle(),
                                 board.getContents(),

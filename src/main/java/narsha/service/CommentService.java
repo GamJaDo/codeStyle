@@ -1,8 +1,8 @@
 package narsha.service;
 
 import jakarta.servlet.http.HttpSession;
-import narsha.dto.CommentEntityRequest;
-import narsha.dto.CommentEntityResponse;
+import narsha.dto.CommentRequest;
+import narsha.dto.CommentResponse;
 import narsha.entity.Board;
 import narsha.entity.Comment;
 import narsha.entity.User;
@@ -33,7 +33,7 @@ public class CommentService {
         this.authService = authService;
     }
 
-    public void createComment(CommentEntityRequest request, BindingResult bindingResult, HttpSession session) {
+    public void createComment(CommentRequest request, BindingResult bindingResult, HttpSession session) {
         validateBindingResult(bindingResult);
 
         User user = authService.getUserFromSession(session);
@@ -43,28 +43,28 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    public List<CommentEntityResponse> findCommentByBoardId(long boardId) {
+    public List<CommentResponse> findCommentByBoardId(long boardId) {
         checkBoardExists(boardId);
 
         return commentRepository.findAll().stream()
                         .filter(c -> c.getBoard().getId() == boardId)
-                        .map(comment -> new CommentEntityResponse(comment.getId(), comment.getUser(), comment.getContents()))
+                        .map(comment -> new CommentResponse(comment.getId(), comment.getUser(), comment.getContents()))
                         .collect(Collectors.toList());
     }
 
-    public List<CommentEntityResponse> findCommentByUserId(long userId) {
+    public List<CommentResponse> findCommentByUserId(long userId) {
         checkUserExists(userId);
 
         return commentRepository.findAll().stream()
                 .filter(c -> c.getUser().getId() == userId)
-                .map(comment -> new CommentEntityResponse(comment.getId(), comment.getUser(), comment.getContents()))
+                .map(comment -> new CommentResponse(comment.getId(), comment.getUser(), comment.getContents()))
                 .collect(Collectors.toList());
     }
 
-    public CommentEntityResponse findCommentById(long id) {
+    public CommentResponse findCommentById(long id) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Comment not found with id " + id));
-        return new CommentEntityResponse(comment.getId(), comment.getUser(), comment.getContents());
+        return new CommentResponse(comment.getId(), comment.getUser(), comment.getContents());
     }
 
     public void deleteComment(Long id, HttpSession session) {

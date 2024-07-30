@@ -9,7 +9,7 @@ import narsha.entity.User;
 
 @Getter
 @AllArgsConstructor
-public class JobPostingBoardRequest {
+public class BoardRequest {
 
     @NotBlank(message = "제목 입력은 필수입니다.")
     @Schema(description = "제목")

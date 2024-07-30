@@ -5,6 +5,7 @@ import narsha.dto.BoardEntityResponse;
 import narsha.dto.BoardRequest;
 import narsha.entity.Board;
 import narsha.entity.User;
+import narsha.enums.BoardTag;
 import narsha.exception.InvalidRegisterException;
 import narsha.repository.BoardRepository;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.webjars.NotFoundException;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,8 +33,9 @@ public class BoardService {
 
     public void createBoard(BoardRequest request, BindingResult bindingResult, HttpSession session) {
         validateBindingResult(bindingResult);
+
         User user = authService.getUserFromSession(session);
-        Board board = request.toEntity(user);
+        Board board = request.toEntity(user, request.getBoardTag());
         boardRepository.save(board);
     }
 
@@ -43,11 +46,12 @@ public class BoardService {
         return new BoardEntityResponse(board.getId(), board.getTitle(), board.getContents(), board.getEditDt(), board.getCreateDt());
     }
 
-    public List<BoardEntityResponse> findBoardPart(Integer howMany, Integer pageNum) {
+    public List<BoardEntityResponse> findBoardPart(BoardTag boardTag, Integer howMany, Integer pageNum) {
         validatePaginationParameters(howMany, pageNum);
+        validateUserTag(boardTag);
 
         Pageable pageable = PageRequest.of(pageNum, howMany);
-        Page<Board> page = boardRepository.findAll(pageable);
+        Page<Board> page = boardRepository.findAllByBoardTag(boardTag,pageable);
 
         return page.getContent().stream()
                 .map(board -> new BoardEntityResponse(
@@ -92,6 +96,12 @@ public class BoardService {
         }
         if (pageNum == null || pageNum < 0) {
             throw new IllegalArgumentException("pageNum must be 0 or greater");
+        }
+    }
+
+    private void validateUserTag(BoardTag boardTag) {
+        if (boardTag == null || !EnumSet.allOf(BoardTag.class).contains(boardTag)) {
+            throw new IllegalArgumentException("Invalid UserTag value");
         }
     }
 

@@ -3,6 +3,7 @@ package narsha.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import narsha.enums.BoardTag;
 //import narsha.enums.UserTag;
 
 import java.time.LocalDateTime;
@@ -37,9 +38,9 @@ public class Board {
     // 수정 시간
     private LocalDateTime editDt = LocalDateTime.now();
 
-//    // UserTag enum 값 추가
-//    @Enumerated(EnumType.STRING)
-//    private UserTag userTag;
+    // UserTag enum 값 추가
+    @Enumerated(EnumType.STRING)
+    private BoardTag boardTag;
 
     // 엔티티가 수정될 때 자동으로 갱신
     @PreUpdate
@@ -48,11 +49,11 @@ public class Board {
     }
 
     public Board(){}
-    public Board(User user, String title, String contents){
+    public Board(User user, String title, String contents, BoardTag boardTag){
         this.user = user;
         this.title = title;
         this.contents = contents;
-//        this.userTag = userTag;
+        this.boardTag = boardTag;
     }
 
     // Board 와 Comment 의 관계 설정

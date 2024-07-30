@@ -1,11 +1,14 @@
 package narsha.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import narsha.entity.Board;
 import narsha.entity.User;
+import narsha.enums.BoardTag;
 
 @Getter
 @AllArgsConstructor
@@ -19,8 +22,11 @@ public class BoardRequest {
     @Schema(description = "글 내용")
     private String contents;
 
-    public Board toEntity(User user){
-    return new Board(user, this.title, this.contents);
-}
+    @Enumerated(EnumType.STRING)
+    private BoardTag boardTag;
+
+    public Board toEntity(User user, BoardTag boardTag){
+        return new Board(user, this.title, this.contents, boardTag);
+    }
 
 }

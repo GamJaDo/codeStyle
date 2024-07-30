@@ -24,15 +24,20 @@ repositories {
 }
 
 dependencies {
+	// lombok
+	compileOnly 'org.projectlombok:lombok:1.18.26'
+	annotationProcessor 'org.projectlombok:lombok:1.18.26'
+
+	// swagger
+	implementation'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4'
+
+	// defualt
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.h2database:h2'
-	annotationProcessor 'org.projectlombok:lombok'
+	runtimeOnly 'com.mysql:mysql-connector-j'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 tasks.named('test') {

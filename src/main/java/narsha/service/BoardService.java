@@ -1,0 +1,98 @@
+package narsha.service;
+
+import jakarta.servlet.http.HttpSession;
+import narsha.dto.JobPostingBoardEntityResponse;
+import narsha.dto.JobPostingBoardRequest;
+import narsha.entity.Board;
+import narsha.entity.User;
+import narsha.exception.InvalidRegisterException;
+import narsha.repository.BoardRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.webjars.NotFoundException;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class BoardService {
+
+    private final BoardRepository boardRepository;
+    private final AuthService authService;
+
+    public BoardService(BoardRepository boardRepository, AuthService authService) {
+        this.boardRepository = boardRepository;
+        this.authService = authService;
+    }
+
+    public void createBoard(JobPostingBoardRequest request, BindingResult bindingResult, HttpSession session) {
+        validateBindingResult(bindingResult);
+        User user = authService.getUserFromSession(session);
+        Board board = request.toEntity(user);
+        boardRepository.save(board);
+    }
+
+    public JobPostingBoardEntityResponse findBoardById(Long id) {
+        checkBoardExists(id);
+
+        Board board = boardRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found with id " + id));
+        return new JobPostingBoardEntityResponse(board.getId(), board.getTitle(), board.getContents(), board.getEditDt(), board.getCreateDt());
+    }
+
+    public List<JobPostingBoardEntityResponse> findBoardPart(Integer howMany, Integer pageNum) {
+        validatePaginationParameters(howMany, pageNum);
+
+        Pageable pageable = PageRequest.of(pageNum, howMany);
+        Page<Board> page = boardRepository.findAll(pageable);
+
+        return page.getContent().stream()
+                .map(board -> new JobPostingBoardEntityResponse(
+                                board.getId(),
+                                board.getTitle(),
+                                board.getContents(),
+                                board.getEditDt(),
+                                board.getCreateDt()
+                        )
+                )
+                .collect(Collectors.toList());
+    }
+
+    public void deleteBoard(Long id, HttpSession session) {
+        checkBoardExists(id);
+
+        Board board = boardRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found with id " + id));
+        authService.isAuthenticated(session, board.getUser().getId());
+
+        boardRepository.delete(board);
+    }
+
+    private void validateBindingResult(BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            FieldError fieldError = bindingResult.getFieldError();
+            String errorMessage = (fieldError != null) ? fieldError.getDefaultMessage() : "Unknown error";
+            throw new InvalidRegisterException(errorMessage);
+        }
+    }
+
+    // ID 존재 여부 검사
+    private void checkBoardExists(Long id) {
+        if (!boardRepository.existsById(id)) {
+            throw new NotFoundException("Post not found with id " + id);
+        }
+    }
+
+    // 페이징 파라미터 유효성 검사
+    private void validatePaginationParameters(Integer howMany, Integer pageNum) {
+        if (howMany == null || howMany <= 0) {
+            throw new IllegalArgumentException("howMany must be greater than 0");
+        }
+        if (pageNum == null || pageNum < 0) {
+            throw new IllegalArgumentException("pageNum must be 0 or greater");
+        }
+    }
+
+}

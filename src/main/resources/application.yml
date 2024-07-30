@@ -1,1 +1,31 @@
-spring.application.name=hackathon-narsha
+spring:
+  datasource:
+    #    driver-class-name: com.mysql.cj.jdbc.Driver
+    #    url: "jdbc:mysql://localhost:3306/nurspace_db?autoReconnect=true&useUnicode=true&serverTimezone=Asia/Seoul&characterEncoding=utf8"
+    driver-class-name: com.mysql.jdbc.Driver
+    url: "jdbc:mysql://localhost:3306/nurspace_db?auto"
+    username: ${DB_USER}
+    password: ${DB_PASSWD}
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  application:
+    name: "hackathon-narsha"
+
+# https://velog.io/@im2sh/Spring-boot-Spring-boot-3-Swagger-3.0-%EC%84%A4%EC%A0%95
+springdoc:
+  api-docs:
+    path: /api-docs
+    version: OPENAPI_3_0  # or OPENAPI_3_1, depending on the version you want to use
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    operations-sorter: alpha
+    tags-sorter: alpha
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+    doc-expansion: none
+  paths-to-match:
+    - /api/**

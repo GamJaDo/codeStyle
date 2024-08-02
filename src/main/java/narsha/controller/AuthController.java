@@ -1,5 +1,6 @@
 package narsha.controller;
 
+import narsha.dto.LoginResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -34,4 +35,11 @@ public class AuthController {
     	authService.loginUser(request, bindingResult, session);
     	return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @PostMapping("/check-session")
+    public ResponseEntity<LoginResponse> checkSession(HttpSession session){
+        LoginResponse response = authService.getDtoFromSession(session);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 }

@@ -2,6 +2,7 @@ package narsha.service;
 
 import jakarta.servlet.http.HttpSession;
 import narsha.dto.LoginRequest;
+import narsha.dto.LoginResponse;
 import narsha.dto.RegisterRequest;
 import narsha.entity.User;
 import narsha.exception.InvalidLoginException;
@@ -54,6 +55,14 @@ public class AuthService {
             throw new UnauthenticatedUserException("User is not authenticated.");
         }
         return (User) user;
+    }
+
+    public LoginResponse getDtoFromSession(HttpSession session) {
+        Object user = session.getAttribute("user");
+        if (!(user instanceof User)) {
+            throw new UnauthenticatedUserException("User is not authenticated.");
+        }
+        return new LoginResponse(((User) user).getEmail(), ((User) user).getPassword());
     }
 
 

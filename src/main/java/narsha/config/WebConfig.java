@@ -11,7 +11,9 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins(
-                        "http://nurspace-narsha.duckdns.org:3000"
+                        "http://nurspace-narsha.duckdns.org:3000",
+                        "http://localhost:3000"
+
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")

@@ -29,3 +29,9 @@ springdoc:
     doc-expansion: none
   paths-to-match:
     - /api/**
+
+server:
+  servlet:
+    session:
+      cookie:
+        http-only: false

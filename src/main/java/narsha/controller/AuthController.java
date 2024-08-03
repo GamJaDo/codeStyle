@@ -4,10 +4,7 @@ import narsha.dto.LoginResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpSession;
 import narsha.dto.LoginRequest;
@@ -36,7 +33,7 @@ public class AuthController {
     	return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping("/check-session")
+    @GetMapping("/check-session")
     public ResponseEntity<LoginResponse> checkSession(HttpSession session){
         LoginResponse response = authService.getDtoFromSession(session);
         return ResponseEntity.status(HttpStatus.OK).body(response);

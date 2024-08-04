@@ -40,7 +40,10 @@ public class AuthService {
         session.setAttribute("user", user);
     }
 
-
+    public void logoutUser(HttpSession session) {
+        getUserFromSession(session);
+        session.removeAttribute("user");
+    }
 
     public void isAuthenticated(HttpSession session, long id) {
         if (!Objects.equals(((User) (session.getAttribute("user"))).getId(), id)) {

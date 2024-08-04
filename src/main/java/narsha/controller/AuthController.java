@@ -33,6 +33,12 @@ public class AuthController {
     	return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpSession session) {
+        authService.logoutUser(session);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     @GetMapping("/check-session")
     public ResponseEntity<LoginResponse> checkSession(HttpSession session){
         LoginResponse response = authService.getDtoFromSession(session);

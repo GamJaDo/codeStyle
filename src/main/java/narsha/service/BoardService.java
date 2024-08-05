@@ -31,11 +31,11 @@ public class BoardService {
         this.authService = authService;
     }
 
-    public void createBoard(BoardRequest request, BindingResult bindingResult, HttpSession session) {
+    public void createBoard(BoardRequest request, BoardTag boardTag, BindingResult bindingResult, HttpSession session) {
         validateBindingResult(bindingResult);
 
         User user = authService.getUserFromSession(session);
-        Board board = request.toEntity(user, request.getBoardTag());
+        Board board = request.toEntity(user, boardTag);
         boardRepository.save(board);
     }
 

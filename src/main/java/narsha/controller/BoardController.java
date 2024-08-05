@@ -27,7 +27,7 @@ public class BoardController {
     public ResponseEntity<Void> createJobPostBoard(
             @RequestBody BoardRequest request, BindingResult bindingResult, HttpSession session
     ) {
-        boardService.createBoard(request, bindingResult, session);
+        boardService.createBoard(request, BoardTag.jobPosting, bindingResult, session);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -55,7 +55,7 @@ public class BoardController {
     public ResponseEntity<Void> createJobSearchBoard(
             @RequestBody BoardRequest request, BindingResult bindingResult, HttpSession session
     ) {
-        boardService.createBoard(request, bindingResult, session);
+        boardService.createBoard(request, BoardTag.jobSearch, bindingResult, session);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

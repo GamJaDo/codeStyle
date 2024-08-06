@@ -2,29 +2,38 @@ package narsha.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import narsha.entity.CareEnrollment;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Getter
 @Setter
-@Schema(description = "돌봄 등록 응답")
+@Schema(description = "Care Enrollment Response")
 public class CareEnrollmentResponse {
 
-    @Schema(description = "등록 ID", example = "1")
+    @Schema(description = "Enrollment ID", example = "1")
     private Long id;
 
-    @Schema(description = "환자 ID", example = "2")
+    @Schema(description = "Caregiver ID", example = "1")
+    private Long caregiverId;
+
+    @Schema(description = "Patient ID", example = "2")
     private Long patientId;
 
-    @Schema(description = "환자 이름", example = "홍길동")
+    @Schema(description = "Caregiver Name", example = "John Doe")
+    private String caregiverName;
+
+    @Schema(description = "Patient Name", example = "Jane Doe")
     private String patientName;
 
-    @Schema(description = "승인 여부", example = "true")
+    @Schema(description = "Approved", example = "false")
     private boolean approved;
 
-    public CareEnrollmentResponse(Long id, Long patientId, String patientName, boolean approved) {
-        this.id = id;
-        this.patientId = patientId;
-        this.patientName = patientName;
-        this.approved = approved;
+    public CareEnrollmentResponse(CareEnrollment careEnrollment) {
+        this.id = careEnrollment.getId();
+        this.caregiverId = careEnrollment.getCaregiver().getId();
+        this.patientId = careEnrollment.getPatient().getId();
+        this.caregiverName = careEnrollment.getCaregiver().getName();
+        this.patientName = careEnrollment.getPatient().getName();
+        this.approved = careEnrollment.isApproved();
     }
 }

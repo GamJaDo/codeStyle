@@ -1,13 +1,9 @@
 package narsha.repository;
 
-import java.util.Optional;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import narsha.entity.CareOffer;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
-@Repository
 public interface CareOfferRepository extends JpaRepository<CareOffer, Long> {
-    Optional<CareOffer> findByPatientId(Long patientId);
+    List<CareOffer> findByCaregiverId(Long caregiverId);
 }

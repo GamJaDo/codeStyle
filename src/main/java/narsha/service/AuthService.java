@@ -34,6 +34,7 @@ public class AuthService<T extends User, R extends AbstractRegisterRequest<T>, L
         validateBindingResult(bindingResult);
         T user = verifyCredentials(request);
         session.setAttribute("user", user);
+        session.setAttribute("userAccount", user.getAccount());
     }
 
     private void validateBindingResult(BindingResult bindingResult) {

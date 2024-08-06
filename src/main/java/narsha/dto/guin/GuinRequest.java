@@ -1,6 +1,7 @@
 package narsha.dto.guin;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import narsha.dto.PostRequest;
 import narsha.entity.Guin;
@@ -9,9 +10,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Schema(description = "구인 요청")
 public class GuinRequest extends PostRequest<Guin, Patient> {
-
+	
     public GuinRequest(String title, String content) {
         super(title, content);
     }

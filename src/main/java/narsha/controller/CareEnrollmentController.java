@@ -2,6 +2,7 @@ package narsha.controller;
 
 import narsha.dto.CareOfferRequest;
 import narsha.dto.CareOfferResponse;
+import narsha.dto.CareEnrollmentRequest;
 import narsha.service.CareEnrollmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,18 @@ public class CareEnrollmentController {
     @PostMapping("/guin/{id}/apply")
     public ResponseEntity<Void> applyToGuin(@PathVariable Long id, @RequestBody CareOfferRequest request, HttpSession session) {
         careEnrollmentService.applyToGuin(id, request, session);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @Operation(summary = "구직 게시글에 제안", description = "환자가 특정 구직 게시글에 간병인을 제안합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "제안 성공"),
+        @ApiResponse(responseCode = "404", description = "게시글을 찾을 수 없음"),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청")
+    })
+    @PostMapping("/gujik/{id}/propose")
+    public ResponseEntity<Void> proposeToCaregiver(@PathVariable Long id, @RequestBody CareEnrollmentRequest request, HttpSession session) {
+        careEnrollmentService.proposeToCaregiver(id, request, session);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

@@ -2,8 +2,8 @@ package narsha.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import narsha.entity.CareEnrollment;
 import io.swagger.v3.oas.annotations.media.Schema;
+import narsha.entity.CareEnrollment;
 
 @Getter
 @Setter

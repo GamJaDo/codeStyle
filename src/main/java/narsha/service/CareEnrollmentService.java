@@ -1,5 +1,7 @@
 package narsha.service;
 
+import narsha.dto.CareEnrollmentRequest;
+import narsha.dto.CareEnrollmentResponse;
 import narsha.dto.CareOfferRequest;
 import narsha.dto.CareOfferResponse;
 import narsha.entity.CareEnrollment;
@@ -33,6 +35,7 @@ public class CareEnrollmentService {
         this.patientRepository = patientRepository;
     }
 
+    // Caregiver가 구인 게시글에 신청
     public void applyToGuin(Long guinId, CareOfferRequest request, HttpSession session) {
         Caregiver caregiver = caregiverRepository.findById(request.getCaregiverId())
                 .orElseThrow(() -> new IllegalArgumentException("Caregiver not found"));
@@ -42,6 +45,18 @@ public class CareEnrollmentService {
 
         CareOffer careOffer = request.toEntity(caregiver, patient);
         careOfferRepository.save(careOffer);
+    }
+
+    // Patient가 간병인을 제안
+    public void proposeToCaregiver(Long gujikId, CareEnrollmentRequest request, HttpSession session) {
+        Patient patient = patientRepository.findById(request.getPatientId())
+                .orElseThrow(() -> new IllegalArgumentException("Patient not found"));
+
+        Caregiver caregiver = caregiverRepository.findById(request.getCaregiverId())
+                .orElseThrow(() -> new IllegalArgumentException("Caregiver not found"));
+
+        CareEnrollment careEnrollment = request.toEntity(caregiver, patient);
+        careEnrollmentRepository.save(careEnrollment);
     }
 
     public void approveEnrollment(Long enrollmentId, HttpSession session) {

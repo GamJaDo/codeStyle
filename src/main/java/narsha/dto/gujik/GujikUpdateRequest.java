@@ -1,6 +1,7 @@
 package narsha.dto.gujik;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import narsha.dto.PostUpdateRequest;
 import narsha.entity.Gujik;

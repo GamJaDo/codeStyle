@@ -40,7 +40,7 @@ public class PostController {
 	@ApiResponse(responseCode = "201", description = "구직 글 생성 성공")
 	@PostMapping("/gujik/create")
 	public ResponseEntity<Void> createGujik(@RequestPart("gujik") GujikRequest request,
-			@RequestPart(value = "profileImage", required = false) MultipartFile postImage, HttpSession session) {
+			@RequestPart(value = "postImage", required = false) MultipartFile postImage, HttpSession session) {
 		gujikService.createGujik(request, postImage, session);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
@@ -74,7 +74,7 @@ public class PostController {
 			@ApiResponse(responseCode = "404", description = "구직 글을 찾을 수 없음") })
 	@PutMapping("/gujik/update/{id}")
 	public ResponseEntity<Void> updateGujik(@PathVariable Long id, @RequestPart("gujik") GujikUpdateRequest request,
-			@RequestPart(value = "profileImage", required = false) MultipartFile postImage, HttpSession session) {
+			@RequestPart(value = "postImage", required = false) MultipartFile postImage, HttpSession session) {
 		gujikService.updateGujik(id, request, postImage,session);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
@@ -99,7 +99,7 @@ public class PostController {
 	@ApiResponse(responseCode = "201", description = "구인 글 생성 성공")
 	@PostMapping("/guin/create")
 	public ResponseEntity<Void> createGuin(@RequestPart("guin") GuinRequest request,
-			@RequestPart(value = "profileImage", required = false) MultipartFile postImage, HttpSession session) {
+			@RequestPart(value = "postImage", required = false) MultipartFile postImage, HttpSession session) {
 		guinService.createGuin(request, postImage, session);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
@@ -133,7 +133,7 @@ public class PostController {
 			@ApiResponse(responseCode = "404", description = "구인 글을 찾을 수 없음") })
 	@PutMapping("/guin/update/{id}")
 	public ResponseEntity<Void> updateGuin(@PathVariable Long id, @RequestPart("guin") GuinUpdateRequest request,
-			@RequestPart(value = "profileImage", required = false) MultipartFile postImage,
+			@RequestPart(value = "postImage", required = false) MultipartFile postImage,
 			HttpSession session) {
 		guinService.updateGuin(id, request, postImage, session);
 		return ResponseEntity.status(HttpStatus.OK).build();

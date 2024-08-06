@@ -20,9 +20,7 @@ public class CaregiverService extends UserService<Caregiver> {
     }
 
     public CaregiverInfoResponse getCaregiverInfo(HttpSession session) {
-    	Object userType = getSessionUser(session);
-        String account = careEnrollmentService.getSessionUserAccount(session, userType.getClass());
-        Caregiver caregiver = findUserByAccount(account);
+        Caregiver caregiver = getSessionUser(session);
         return caregiver.toDto();
     }
     

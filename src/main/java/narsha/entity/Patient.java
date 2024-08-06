@@ -19,8 +19,8 @@ public class Patient extends User {
 	private int weight;
 
 	@ManyToOne
-	@JoinColumn(name = "patientInfo_id")
-	PatientMedRecord patientInfo;
+	@JoinColumn(name = "patientMedRecord_id")
+	PatientMedRecord patientMedRecord;
 
 	public Patient() {
 		super();
@@ -34,11 +34,11 @@ public class Patient extends User {
         super();
         this.height = request.getHeight();
         this.weight = request.getWeight();
-        this.patientInfo = request.getMedRecord();
+        this.patientMedRecord = request.getMedRecord();
     }
 
 	public PatientInfoResponse toDto() {
 		return new PatientInfoResponse(getAccount(), getName(), getProfileImageUrl(), getAge(), getHeight(),
-				getWeight(), getGender(), getLocation(), patientInfo);
+				getWeight(), getGender(), getLocation(), patientMedRecord);
 	}
 }

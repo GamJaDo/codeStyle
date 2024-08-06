@@ -15,8 +15,8 @@ import narsha.dto.caregiver.CaregiverInfoResponse;
 public class Caregiver extends User {
 
 	@ManyToOne
-	@JoinColumn(name = "caregiverInfo_id")
-	CaregiverIntro caregiverInfo;
+	@JoinColumn(name = "caregiverIntro_id")
+	CaregiverIntro caregiverIntro;
 
 	public Caregiver() {
 		super();
@@ -28,6 +28,6 @@ public class Caregiver extends User {
 
 	public CaregiverInfoResponse toDto() {
 		return new CaregiverInfoResponse(getAccount(), getName(), getProfileImageUrl(), getAge(), getGender(),
-				getLocation(), caregiverInfo);
+				getLocation(), caregiverIntro);
 	}
 }

@@ -24,7 +24,7 @@ public class CaregiverProfileUpdateRequest extends AbstractProfileUpdateRequest<
         existingCaregiver.setAge(getAge());
         existingCaregiver.setGender(getGender());
         existingCaregiver.setLocation(getLocation());
-        existingCaregiver.setCaregiverInfo(caregiverIntro);
+        existingCaregiver.setCaregiverIntro(caregiverIntro);
         return existingCaregiver;
     }
 }

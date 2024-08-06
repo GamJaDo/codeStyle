@@ -32,10 +32,9 @@ public abstract class Post<U extends User, R extends PostResponse<U>> {
 
     public Post() {}
 
-    public Post(String title, String content, String imageUrl, U author) {
+    public Post(String title, String content, U author) {
         this.title = title;
         this.content = content;
-        this.postImageUrl = imageUrl;
         this.createdAt = LocalDateTime.now();
         this.author = author;
     }

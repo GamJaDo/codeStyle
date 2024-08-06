@@ -16,8 +16,8 @@ public class Guin extends Post<Patient, GuinResponse> {
         super();
     }
 
-    public Guin(String title, String content, String imageUrl, Patient author) {
-        super(title, content, imageUrl, author);
+    public Guin(String title, String content, Patient author) {
+        super(title, content, author);
     }
 
     @Override

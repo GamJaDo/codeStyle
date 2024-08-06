@@ -1,6 +1,5 @@
 package narsha.dto.guin;
 
-import org.springframework.web.multipart.MultipartFile;
 import lombok.Getter;
 import lombok.Setter;
 import narsha.dto.PostRequest;

@@ -15,10 +15,13 @@ public class UserService<T extends User> {
 
     protected final UserRepository<T> userRepository;
     private final ImageUploadService imageUploadService;
+    protected final CareEnrollmentService careEnrollmentService;
 
-    protected UserService(UserRepository<T> userRepository, ImageUploadService imageUploadService) {
+    protected UserService(UserRepository<T> userRepository, ImageUploadService imageUploadService,
+    		CareEnrollmentService careEnrollmentService) {
         this.userRepository = userRepository;
         this.imageUploadService = imageUploadService;
+        this.careEnrollmentService = careEnrollmentService;
     }
 
     public T findUserByAccount(String account) {
@@ -27,7 +30,8 @@ public class UserService<T extends User> {
     }
 
     public void updateImage(UserImageUpdateRequest request, HttpSession session) {
-        String account = getSessionUserAccount(session);
+    	Object userType = getSessionUser(session);
+        String account = careEnrollmentService.getSessionUserAccount(session, userType.getClass());
         T user = findUserByAccount(account);
 
         MultipartFile newImage = request.getNewImage();
@@ -38,14 +42,16 @@ public class UserService<T extends User> {
     }
 
     public void updateName(UserNameUpdateRequest request, HttpSession session) {
-        String account = getSessionUserAccount(session);
+    	Object userType = getSessionUser(session);
+        String account = careEnrollmentService.getSessionUserAccount(session, userType.getClass());
         T user = findUserByAccount(account);
         user.setName(request.getNewName());
         userRepository.save(user);
     }
 
     public void updatePassword(UserPasswordUpdateRequest request, HttpSession session) {
-        String account = getSessionUserAccount(session);
+    	Object userType = getSessionUser(session);
+        String account = careEnrollmentService.getSessionUserAccount(session, userType.getClass());
         T user = findUserByAccount(account);
         request.passwordMatch();
         user.setPassword(request.getNewPassword());
@@ -53,17 +59,18 @@ public class UserService<T extends User> {
     }
     
     public void updateProfile(AbstractProfileUpdateRequest<T> request, HttpSession session) {
-        String account = getSessionUserAccount(session);
+    	Object userType = getSessionUser(session);
+        String account = careEnrollmentService.getSessionUserAccount(session, userType.getClass());
         T existingUser = findUserByAccount(account);
         T updatedUser = request.toEntity(existingUser);
         userRepository.save(updatedUser);
     }
 
-    public String getSessionUserAccount(HttpSession session) {
-        String userAccount = (String) session.getAttribute("userAccount");
-        if (userAccount == null) {
+    public Object getSessionUser(HttpSession session) {
+        Object user = (String) session.getAttribute("user");
+        if (user == null) {
             throw new InvalidUserException("Account not found in session.", HttpStatus.NOT_FOUND);
         }
-        return userAccount;
+        return user;
     }
 }

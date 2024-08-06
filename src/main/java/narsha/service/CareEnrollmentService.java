@@ -106,13 +106,25 @@ public class CareEnrollmentService {
         careOfferRepository.save(careOffer);
     }
 
-    private <T> Long getSessionUserId(HttpSession session, Class<T> userType) {
+    public <T> Long getSessionUserId(HttpSession session, Class<T> userType) {
         Object user = session.getAttribute("user");
         if (userType.isInstance(user)) {
             if (user instanceof Patient) {
                 return ((Patient) user).getId();
             } else if (user instanceof Caregiver) {
                 return ((Caregiver) user).getId();
+            }
+        }
+        throw new IllegalArgumentException("Unauthorized access");
+    }
+    
+    public <T> String getSessionUserAccount(HttpSession session, Class<T> userType) {
+        Object user = session.getAttribute("user");
+        if (userType.isInstance(user)) {
+            if (user instanceof Patient) {
+                return ((Patient) user).getAccount();
+            } else if (user instanceof Caregiver) {
+                return ((Caregiver) user).getAccount();
             }
         }
         throw new IllegalArgumentException("Unauthorized access");

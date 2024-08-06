@@ -13,13 +13,15 @@ import narsha.repository.PatientRepository;
 @Service
 public class PatientService extends UserService<Patient> {
 
-    public PatientService(PatientRepository patientRepository, ImageUploadService imageUploadService) {
-        super(patientRepository, imageUploadService);
+    public PatientService(PatientRepository patientRepository, ImageUploadService imageUploadService,
+    		CareEnrollmentService careEnrollmentService) {
+        super(patientRepository, imageUploadService, careEnrollmentService);
     }
 
     public PatientInfoResponse getPatientInfo(HttpSession session) {
-        String patientAccount = getSessionUserAccount(session);
-        Patient patient = findUserByAccount(patientAccount);
+    	Object userType = getSessionUser(session);
+        String account = careEnrollmentService.getSessionUserAccount(session, userType.getClass());
+        Patient patient = findUserByAccount(account);
         return patient.toDto();
     }
 

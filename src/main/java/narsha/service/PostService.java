@@ -8,6 +8,8 @@ import narsha.entity.User;
 import narsha.exception.InvalidUserException;
 import narsha.repository.PostRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
+
 import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
@@ -36,15 +38,15 @@ public abstract class PostService<T extends Post<U, S>, R extends PostRequest<T,
         return post.toDto();
     }
 
-    public void createPost(R request, HttpSession session) {
+    public void createPost(R request, MultipartFile postImage, HttpSession session) {
     	U author = getSessionUser(session);
-        T post = request.toEntity(author, null);
-        imageUploadService.postImageUrlSave(post, request.getImage());
+        T post = request.toEntity(author);
+        imageUploadService.postImageUrlSave(post, postImage);
 
         postRepository.save(post);
     }
 
-    public void updatePost(Long id, PostUpdateRequest<T> request, HttpSession session) {
+    public void updatePost(Long id, PostUpdateRequest<T> request, MultipartFile postImage, HttpSession session) {
         T post = findPostById(id);
         validateAuthor(session, post.getAuthor());
 

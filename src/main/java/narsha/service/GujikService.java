@@ -8,6 +8,8 @@ import narsha.entity.Gujik;
 import narsha.entity.Caregiver;
 import narsha.repository.GujikRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
@@ -19,8 +21,8 @@ public class GujikService extends PostService<Gujik, GujikRequest, GujikResponse
         super(gujikRepository, imageUploadService, Caregiver.class);
     }
 
-    public void createGujik(GujikRequest request, HttpSession session) {
-        createPost(request, session);
+    public void createGujik(GujikRequest request, MultipartFile postImage, HttpSession session) {
+        createPost(request, postImage, session);
     }
 
     public GujikResponse getGujikById(Long id) {
@@ -31,8 +33,8 @@ public class GujikService extends PostService<Gujik, GujikRequest, GujikResponse
         return getAllPosts();
     }
 
-    public void updateGujik(Long id, GujikUpdateRequest request, HttpSession session) {
-        updatePost(id, request, session);
+    public void updateGujik(Long id, GujikUpdateRequest request, MultipartFile postImage, HttpSession session) {
+        updatePost(id, request, postImage, session);
     }
 
     public void deleteGujik(Long id, HttpSession session) {

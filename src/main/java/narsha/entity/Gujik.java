@@ -16,8 +16,8 @@ public class Gujik extends Post<Caregiver, GujikResponse> {
         super();
     }
 
-    public Gujik(String title, String content, String imageUrl, Caregiver author) {
-        super(title, content, imageUrl, author);
+    public Gujik(String title, String content, Caregiver author) {
+        super(title, content, author);
     }
 
     @Override

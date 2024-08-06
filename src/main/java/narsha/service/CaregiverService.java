@@ -14,13 +14,15 @@ import narsha.repository.CaregiverRepository;
 @Service
 public class CaregiverService extends UserService<Caregiver> {
 
-    public CaregiverService(CaregiverRepository caregiverRepository, ImageUploadService imageUploadService) {
-        super(caregiverRepository, imageUploadService);
+    public CaregiverService(CaregiverRepository caregiverRepository, ImageUploadService imageUploadService,
+    		CareEnrollmentService careEnrollmentService) {
+        super(caregiverRepository, imageUploadService, careEnrollmentService);
     }
 
     public CaregiverInfoResponse getCaregiverInfo(HttpSession session) {
-        String caregiverAccount = getSessionUserAccount(session);
-        Caregiver caregiver = findUserByAccount(caregiverAccount);
+    	Object userType = getSessionUser(session);
+        String account = careEnrollmentService.getSessionUserAccount(session, userType.getClass());
+        Caregiver caregiver = findUserByAccount(account);
         return caregiver.toDto();
     }
     

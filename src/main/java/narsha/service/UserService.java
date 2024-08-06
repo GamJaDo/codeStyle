@@ -15,13 +15,10 @@ public class UserService<T extends User> {
 
     protected final UserRepository<T> userRepository;
     private final ImageUploadService imageUploadService;
-    protected final CareEnrollmentService careEnrollmentService;
 
-    protected UserService(UserRepository<T> userRepository, ImageUploadService imageUploadService,
-    		CareEnrollmentService careEnrollmentService) {
+    protected UserService(UserRepository<T> userRepository, ImageUploadService imageUploadService) {
         this.userRepository = userRepository;
         this.imageUploadService = imageUploadService;
-        this.careEnrollmentService = careEnrollmentService;
     }
 
     public T findUserByAccount(String account) {
@@ -30,7 +27,7 @@ public class UserService<T extends User> {
     }
 
     public void updateImage(UserImageUpdateRequest request, HttpSession session) {
-        T user = getSessionUser(session);
+        T user = getSessionAccount(session);
 
         MultipartFile newImage = request.getNewImage();
         if (newImage != null && !newImage.isEmpty()) {
@@ -40,26 +37,26 @@ public class UserService<T extends User> {
     }
 
     public void updateName(UserNameUpdateRequest request, HttpSession session) {
-        T user = getSessionUser(session);
+        T user = getSessionAccount(session);
         user.setName(request.getNewName());
         userRepository.save(user);
     }
 
     public void updatePassword(UserPasswordUpdateRequest request, HttpSession session) {
-        T user = getSessionUser(session);
+        T user = getSessionAccount(session);
         request.passwordMatch();
         user.setPassword(request.getNewPassword());
         userRepository.save(user);
     }
 
     public void updateProfile(AbstractProfileUpdateRequest<T> request, HttpSession session) {
-        T existingUser = getSessionUser(session);
+        T existingUser = getSessionAccount(session);
         T updatedUser = request.toEntity(existingUser);
         userRepository.save(updatedUser);
     }
 
-    protected T getSessionUser(HttpSession session) {
-        String account = (String) session.getAttribute("user");
+    protected T getSessionAccount(HttpSession session) {
+        String account = (String) session.getAttribute("userAccount");
         if (account == null) {
             throw new InvalidUserException("Account not found in session.", HttpStatus.NOT_FOUND);
         }

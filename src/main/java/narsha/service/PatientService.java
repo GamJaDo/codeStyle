@@ -19,9 +19,7 @@ public class PatientService extends UserService<Patient> {
     }
 
     public PatientInfoResponse getPatientInfo(HttpSession session) {
-    	Object userType = getSessionUser(session);
-        String account = careEnrollmentService.getSessionUserAccount(session, userType.getClass());
-        Patient patient = findUserByAccount(account);
+        Patient patient = getSessionUser(session);
         return patient.toDto();
     }
 

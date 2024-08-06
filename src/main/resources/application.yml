@@ -32,3 +32,9 @@ cloud:
       static: ap-northeast-2
     s3:
       bucket: nurspace-bucket
+      
+server:
+  servlet:
+    session:
+      cookie:
+        http-only: false

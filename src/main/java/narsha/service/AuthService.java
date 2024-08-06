@@ -1,82 +1,57 @@
 package narsha.service;
 
+import org.springframework.validation.BindingResult;
+import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpSession;
-import narsha.dto.LoginRequest;
-import narsha.dto.RegisterRequest;
+import narsha.dto.AbstractRegisterRequest;
+import narsha.dto.UserLoginRequest;
 import narsha.entity.User;
+import narsha.exception.InvalidFormatException;
 import narsha.exception.InvalidLoginException;
 import narsha.exception.InvalidRegisterException;
-import narsha.exception.UnauthenticatedUserException;
 import narsha.repository.UserRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 
-import java.util.Objects;
+public class AuthService<T extends User, R extends AbstractRegisterRequest<T>, L extends UserLoginRequest<T>> {
 
-@Service
-public class AuthService {
+    protected final UserRepository<T> userRepository;
+    private final ImageUploadService imageUploadService;
 
-    private final UserRepository userRepository;
-
-    public AuthService(UserRepository userRepository) {
+    protected AuthService(UserRepository<T> userRepository, ImageUploadService imageUploadService) {
         this.userRepository = userRepository;
+        this.imageUploadService = imageUploadService;
     }
 
-    public void createUser(RegisterRequest request, BindingResult bindingResult) {
+    public void createUser(R request, MultipartFile profileImage, BindingResult bindingResult) {
         validateBindingResult(bindingResult);
-        DuplicateRegistration(request);
+        duplicateRegistration(request);
         request.passwordMatch();
-
-        User user = request.toEntity();
+        T user = request.toEntity();
+        imageUploadService.profileImageUrlSave(user, profileImage);
         userRepository.save(user);
     }
 
-    public void loginUser(LoginRequest request, BindingResult bindingResult, HttpSession session) {
+    public void loginUser(L request, BindingResult bindingResult, HttpSession session) {
         validateBindingResult(bindingResult);
-        User user = verifyCredentials(request);
-
+        T user = verifyCredentials(request);
         session.setAttribute("user", user);
     }
 
-
-
-    public void isAuthenticated(HttpSession session, long id) {
-        if (!Objects.equals(((User) (session.getAttribute("user"))).getId(), id)) {
-            throw new UnauthenticatedUserException("User is not authenticated.");
-        }
-    }
-
-    // 세션 사용자 확인 및 가져오기 메서드
-    public User getUserFromSession(HttpSession session) {
-        Object user = session.getAttribute("user");
-        if (!(user instanceof User)) {
-            throw new UnauthenticatedUserException("User is not authenticated.");
-        }
-        return (User) user;
-    }
-
-
-
     private void validateBindingResult(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            FieldError fieldError = bindingResult.getFieldError();
-            String errorMessage = (fieldError != null) ? fieldError.getDefaultMessage() : "Unknown error";
-            throw new InvalidRegisterException(errorMessage);
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            throw new InvalidFormatException(errorMessage);
         }
     }
 
-    private void DuplicateRegistration(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
+    private void duplicateRegistration(R request) {
+        if (userRepository.existsByAccount(request.getAccount())) {
             throw new InvalidRegisterException("You are already a registered user.");
         }
     }
 
-    private User verifyCredentials(LoginRequest request) {
-        User user = userRepository.findByEmail(request.getEmail());
-        if (user == null) {
-            throw new InvalidLoginException("This is not a registered email.");
-        }
+    private T verifyCredentials(L request) {
+        T user = userRepository.findByAccount(request.getAccount())
+                .orElseThrow(() -> new InvalidLoginException("This is not a registered account."));
         request.passwordMatch(user);
         return user;
     }

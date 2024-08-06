@@ -2,23 +2,29 @@ package narsha.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import narsha.entity.CareOffer;
 import narsha.entity.Caregiver;
 import narsha.entity.Patient;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 @Getter
 @Setter
-@Schema(description = "돌봄 제안 요청")
+@Schema(description = "Care Offer Request")
 public class CareOfferRequest {
 
-    @Schema(description = "일일 요금", example = "100000")
-    private int dailyRate;
+    @Schema(description = "Caregiver ID", example = "1")
+    private Long caregiverId;
 
-    @Schema(description = "총 금액", example = "700000")
-    private int totalAmount;
+    @Schema(description = "Patient ID", example = "2")
+    private Long patientId;
 
-    public CareOffer toEntity(Patient patient, Caregiver caregiver) {
-        return new CareOffer(patient, caregiver, dailyRate, totalAmount);
+    @Schema(description = "Daily Rate", example = "100.0")
+    private double dailyRate;
+
+    @Schema(description = "Total Amount", example = "1000.0")
+    private double totalAmount;
+
+    public CareOffer toEntity(Caregiver caregiver, Patient patient) {
+        return new CareOffer(caregiver, patient, this.dailyRate, this.totalAmount);
     }
 }

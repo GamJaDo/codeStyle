@@ -3,28 +3,45 @@ package narsha.dto;
 import lombok.Getter;
 import lombok.Setter;
 import io.swagger.v3.oas.annotations.media.Schema;
+import narsha.entity.CareOffer;
 
 @Getter
 @Setter
-@Schema(description = "돌봄 제안 응답")
+@Schema(description = "Care Offer Response")
 public class CareOfferResponse {
 
-    @Schema(description = "돌봄 제공자 이름", example = "홍길동")
+    @Schema(description = "Offer ID", example = "1")
+    private Long id;
+
+    @Schema(description = "Caregiver ID", example = "1")
+    private Long caregiverId;
+
+    @Schema(description = "Patient ID", example = "2")
+    private Long patientId;
+
+    @Schema(description = "Caregiver Name", example = "John Doe")
     private String caregiverName;
 
-    @Schema(description = "돌봄 제공자 프로필 이미지 URL", example = "http://example.com/profile.jpg")
-    private String caregiverProfileImageUrl;
+    @Schema(description = "Patient Name", example = "Jane Doe")
+    private String patientName;
 
-    @Schema(description = "일일 요금", example = "100000")
-    private int dailyRate;
+    @Schema(description = "Daily Rate", example = "100.0")
+    private double dailyRate;
 
-    @Schema(description = "총 금액", example = "700000")
-    private int totalAmount;
+    @Schema(description = "Total Amount", example = "1000.0")
+    private double totalAmount;
 
-    public CareOfferResponse(String caregiverName, String caregiverProfileImageUrl, int dailyRate, int totalAmount) {
-        this.caregiverName = caregiverName;
-        this.caregiverProfileImageUrl = caregiverProfileImageUrl;
-        this.dailyRate = dailyRate;
-        this.totalAmount = totalAmount;
+    @Schema(description = "Accepted", example = "false")
+    private boolean accepted;
+
+    public CareOfferResponse(CareOffer careOffer) {
+        this.id = careOffer.getId();
+        this.caregiverId = careOffer.getCaregiver().getId();
+        this.patientId = careOffer.getPatient().getId();
+        this.caregiverName = careOffer.getCaregiver().getName();
+        this.patientName = careOffer.getPatient().getName();
+        this.dailyRate = careOffer.getDailyRate();
+        this.totalAmount = careOffer.getTotalAmount();
+        this.accepted = careOffer.isAccepted();
     }
 }

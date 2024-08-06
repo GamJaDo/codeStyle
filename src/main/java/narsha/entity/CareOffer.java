@@ -1,52 +1,43 @@
 package narsha.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import narsha.dto.CareOfferResponse;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
-@Table(name = "care_offers")
+@Table(name = "care_offer")
 public class CareOffer {
 
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "patient_id", nullable = false)
-    private Patient patient;
 
     @ManyToOne
     @JoinColumn(name = "caregiver_id", nullable = false)
     private Caregiver caregiver;
 
-    private int dailyRate;
-    private int totalAmount;
+    @ManyToOne
+    @JoinColumn(name = "patient_id", nullable = false)
+    private Patient patient;
 
-    public CareOffer() {}
+    private double dailyRate;
+    private double totalAmount;
+    private boolean accepted;
 
-    public CareOffer(Patient patient, Caregiver caregiver, int dailyRate, int totalAmount) {
-        this.patient = patient;
+    public CareOffer(Caregiver caregiver, Patient patient, double dailyRate, double totalAmount) {
         this.caregiver = caregiver;
+        this.patient = patient;
         this.dailyRate = dailyRate;
         this.totalAmount = totalAmount;
+        this.accepted = false;
     }
-    
+
     public CareOfferResponse toDto() {
-        return new CareOfferResponse(
-            this.caregiver.getName(),
-            this.caregiver.getProfileImageUrl(),
-            this.dailyRate,
-            this.totalAmount
-        );
+        return new CareOfferResponse(this);
     }
 }

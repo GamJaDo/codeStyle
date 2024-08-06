@@ -1,19 +1,17 @@
 package narsha.controller;
 
-import java.util.List;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import jakarta.servlet.http.HttpSession;
-import narsha.dto.CareEnrollmentRequest;
-import narsha.dto.CareEnrollmentResponse;
 import narsha.dto.CareOfferRequest;
 import narsha.dto.CareOfferResponse;
 import narsha.service.CareEnrollmentService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpSession;
+import java.util.List;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/api/care-enrollment")
@@ -26,36 +24,48 @@ public class CareEnrollmentController {
         this.careEnrollmentService = careEnrollmentService;
     }
 
-    @Operation(summary = "간병 신청 제출", description = "환자가 간병 신청을 제출합니다.")
-    @ApiResponse(responseCode = "201", description = "간병 신청 성공")
-    @PostMapping("/submit")
-    public ResponseEntity<Void> submitEnrollment(@RequestBody CareEnrollmentRequest request, HttpSession session) {
-        careEnrollmentService.submitEnrollment(request, session);
+    @Operation(summary = "구인 게시글에 신청", description = "간병인이 특정 구인 게시글에 신청합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "신청 성공"),
+        @ApiResponse(responseCode = "404", description = "게시글을 찾을 수 없음"),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청")
+    })
+    @PostMapping("/guin/{id}/apply")
+    public ResponseEntity<Void> applyToGuin(@PathVariable Long id, @RequestBody CareOfferRequest request, HttpSession session) {
+        careEnrollmentService.applyToGuin(id, request, session);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @Operation(summary = "받은 간병 신청 조회", description = "간병인이 받은 간병 신청 목록을 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "간병 신청 목록 조회 성공")
-    @GetMapping("/received")
-    public ResponseEntity<List<CareEnrollmentResponse>> viewReceivedEnrollments(HttpSession session) {
-        List<CareEnrollmentResponse> enrollments = careEnrollmentService.viewReceivedEnrollments(session);
-        return ResponseEntity.ok(enrollments);
-    }
-
-    @Operation(summary = "간병 신청 승인", description = "간병인이 간병 신청을 승인합니다.")
-    @ApiResponse(responseCode = "200", description = "간병 신청 승인 성공")
-    @PostMapping("/approve/{id}")
-    public ResponseEntity<Void> approveEnrollment(@PathVariable Long id,
-                                                  @RequestBody CareOfferRequest request, HttpSession session) {
-        careEnrollmentService.approveEnrollment(id, request, session);
+    @Operation(summary = "간병 신청 승인", description = "환자가 간병 신청을 승인합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "승인 성공"),
+        @ApiResponse(responseCode = "404", description = "신청을 찾을 수 없음")
+    })
+    @PostMapping("/enrollment/{id}/approve")
+    public ResponseEntity<Void> approveEnrollment(@PathVariable Long id, HttpSession session) {
+        careEnrollmentService.approveEnrollment(id, session);
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "승인된 간병 상세 정보 조회", description = "환자가 승인된 간병의 상세 정보를 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "간병 상세 정보 조회 성공")
-    @GetMapping("/approved-care-detail")
-    public ResponseEntity<CareOfferResponse> viewApprovedCareDetail(HttpSession session) {
-        CareOfferResponse careDetail = careEnrollmentService.getApprovedCareDetail(session);
-        return ResponseEntity.ok(careDetail);
+    @Operation(summary = "간병 신청 거절", description = "환자가 간병 신청을 거절합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "거절 성공"),
+        @ApiResponse(responseCode = "404", description = "신청을 찾을 수 없음")
+    })
+    @PostMapping("/enrollment/{id}/reject")
+    public ResponseEntity<Void> rejectEnrollment(@PathVariable Long id, HttpSession session) {
+        careEnrollmentService.rejectEnrollment(id, session);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "받은 간병 신청 조회", description = "간병인이 받은 모든 간병 신청을 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "조회 성공"),
+        @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자")
+    })
+    @GetMapping("/received-offers")
+    public ResponseEntity<List<CareOfferResponse>> viewReceivedCareOffers(HttpSession session) {
+        List<CareOfferResponse> offers = careEnrollmentService.viewReceivedCareOffers(session);
+        return ResponseEntity.ok(offers);
     }
 }

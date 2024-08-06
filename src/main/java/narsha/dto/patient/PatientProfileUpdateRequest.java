@@ -32,7 +32,7 @@ public class PatientProfileUpdateRequest extends AbstractProfileUpdateRequest<Pa
         existingPatient.setLocation(getLocation());
         existingPatient.setHeight(height);
         existingPatient.setWeight(weight);
-        existingPatient.setPatientInfo(medRecord);
+        existingPatient.setPatientMedRecord(medRecord);
         return existingPatient;
     }
 }
